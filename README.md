@@ -7,7 +7,7 @@ installation
 Include script *after* the jQuery library:
 
 ```html
-<script src="/path/to/jquery.translit-0.1.0.js"></script>
+<script src="/path/to/jquery.translit-0.1.1.js"></script>
 ```
 
 usage
