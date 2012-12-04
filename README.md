@@ -66,7 +66,7 @@ Stop watching:
 $('input#input-1').translit('unwatch');
 ```
 
-Replace the existing values of the elements with transliterated ones:
+Transliterate a string:
 
 ```javascript
 $.fn.translit('exec', 'Прица Говорун отличается умом и сообразительностью')
