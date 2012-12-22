@@ -1,8 +1,8 @@
-/**
- * jQuery Translit Plugin
- * By: Vadim Borodean
- * Version: 0.1.1
+/*!
+ * jQuery Translit Plugin v0.1.3
+ * www.github.com/borodean/jquery-translit
  *
+ * (c) Vadim Borodean, 2012
  * This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
  * and/or modify it under the terms of the Do What The Fuck You Want
@@ -16,7 +16,7 @@
 
     'use strict';
 
-    var dictionary, events, methods;
+    var dictionary, methods;
 
     dictionary = {
         'а': 'a',
@@ -54,46 +54,29 @@
         'я': 'ia'
     };
 
-    events = 'input.translit keyup.translit propertychange.translit';
-
     methods = {
         init: function () {
             return this.each(function () {
-                $(this).val(methods.exec($(this).val()));
+                $(this).val($.transliterate($(this).val()));
             });
         },
-        exec: function (string) {
-            return string.replace(/([а-яё])/gi, function (matchResult) {
-                var matchResultLowerCase, replaceValue;
-                matchResultLowerCase = matchResult.toLowerCase();
-                replaceValue = dictionary[matchResultLowerCase];
-                if (typeof replaceValue === 'undefined') {
-                    return matchResult;
-                }
-                if (matchResultLowerCase === matchResult) {
-                    return replaceValue;
-                }
-                return replaceValue.substring(0, 1).toUpperCase() +
-                       replaceValue.substring(1);
-            });
+        receive: function (target) {
+            return $(this).val($.transliterate($(target).val));
         },
-        receive: function (sender) {
-            $(this).val(methods.exec($(sender).val()));
+        send: function (target) {
+            return $(target).val($.transliterate($(this).val()));
         },
-        send: function (receiver) {
-            $(receiver).val(methods.exec($(this).val()));
-        },
-        watch: function (sender, unwatchOnChange) {
+        watch: function (target, unwatchOnChange) {
             return this.each(function () {
                 var data, that;
-                data = $(this).data('senders');
+                data = $(this).data('targets.translit');
                 that = this;
-                $(this).data('senders', $(data).add(sender));
-                $(sender).on(events, function (e) {
+                $(this).data('targets.translit', $(data).add(target));
+                $(target).on('change.translit input.translit keyup.translit propertychange.translit', function () {
                     $(this).translit('send', that);
                 });
                 if (unwatchOnChange) {
-                    $(this).one('change.translit', function (e) {
+                    $(this).on('change.translit', function () {
                         $(this).translit('unwatch');
                     });
                 }
@@ -101,8 +84,8 @@
         },
         unwatch: function () {
             return this.each(function () {
-                $($(this).data('senders')).off(events);
-                $(this).removeData('senders');
+                $($(this).data('targets.translit')).off('.translit');
+                $(this).removeData('targets.translit');
             });
         }
     };
@@ -115,6 +98,22 @@
             return methods.init.apply(this, arguments);
         }
         $.error('Method ' + method + ' does not exist on jQuery.translit');
+    };
+
+    $.transliterate = function (string) {
+        return string.replace(/([а-яё])/gi, function (matchResult) {
+            var matchResultLowerCase, replaceValue;
+            matchResultLowerCase = matchResult.toLowerCase();
+            replaceValue = dictionary[matchResultLowerCase];
+            if (typeof replaceValue === 'undefined') {
+                return matchResult;
+            }
+            if (matchResultLowerCase === matchResult) {
+                return replaceValue;
+            }
+            return replaceValue.substring(0, 1).toUpperCase() +
+                   replaceValue.substring(1);
+        });
     };
 
 }(jQuery));
