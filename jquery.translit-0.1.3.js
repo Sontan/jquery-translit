@@ -61,7 +61,7 @@
             });
         },
         receive: function (target) {
-            return $(this).val($.transliterate($(target).val));
+            return $(this).val($.transliterate($(target).val()));
         },
         send: function (target) {
             return $(target).val($.transliterate($(this).val()));
