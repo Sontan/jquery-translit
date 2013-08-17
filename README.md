@@ -69,6 +69,6 @@ $('input#input-1').translit('unwatch');
 Transliterate a string:
 
 ```javascript
-$.fn.translit('exec', 'Прица Говорун отличается умом и сообразительностью')
+$.transliterate('Птица Говорун отличается умом и сообразительностью');
 // -> "Pritca Govorun otlichaetsia umom i soobrazitelnostiu"
 ```
